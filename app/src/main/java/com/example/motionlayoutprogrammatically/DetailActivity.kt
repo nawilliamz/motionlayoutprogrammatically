@@ -1,9 +1,11 @@
 package com.example.motionlayoutprogrammatically
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,7 @@ import androidx.constraintlayout.motion.widget.MotionScene
 import androidx.constraintlayout.motion.widget.TransitionBuilder
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.isVisible
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -25,11 +28,17 @@ import kotlinx.coroutines.cancel
         private lateinit var binding: ActivityDetailBinding
         private lateinit var scene: MotionScene
 
+//        private var downloadAnimationHasRun:Boolean
 
 
+//        init {
+//            downloadAnimationHasRun = false
+//        }
+
+        
         private fun ConstraintLayout.initStartSet() = ConstraintSet().apply {
             clone(this@initStartSet)
-            setStartingConstraints(this)
+//            setStartingConstraints(this)
             applyTo(this@initStartSet)
         }
 
@@ -44,7 +53,7 @@ import kotlinx.coroutines.cancel
 
         private fun ConstraintLayout.endStartSet() = ConstraintSet().apply {
             clone(this@endStartSet)
-            setEndingConstraints(this)
+//            setEndingConstraints(this)
             applyTo(this@endStartSet)
         }
 
@@ -63,13 +72,28 @@ import kotlinx.coroutines.cancel
             binding.statusText.setText(status)
             //*****************************************************************
 
-            runMotionLayoutTransition()
+            binding.detailOverlayText.setOnClickListener {
+
+                    binding.detailOverlayText.visibility = View.INVISIBLE
+
+                    //run the anbimation
+                    binding.motionLayout.transitionToEnd()
+
+
+            }
+
+            binding.backButton.setOnClickListener {
+
+//                downloadAnimationHasRun = false
+
+                val intent = Intent(this@DetailActivity, MainActivity::class.java)
+                startActivity(intent)
+            }
+//            runMotionLayoutTransition()
 
         }
 
         private fun runMotionLayoutTransition() {
-
-//        val initSet = binding.root.getConstraintSet(binding.root.endState)
 
             scene = MotionScene(binding.root).apply {
 
@@ -102,13 +126,13 @@ import kotlinx.coroutines.cancel
 
 
             //set the attributes (textColor & textSize)
-//            binding.statusText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            binding.statusText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
             binding.statusText.setTextColor(Color.BLACK)
 
             //set the layoutParameters (viewWidth, viewHeight, marginStart, marginEnd)
             val params = (binding.statusText.layoutParams as ViewGroup.MarginLayoutParams)
-            params.height = resources.getDimension(R.dimen.status_text_start_height).toInt()
-//            params.height = LayoutParams.WRAP_CONTENT
+//            params.height = resources.getDimension(R.dimen.status_text_start_height).toInt()
+            params.height = LayoutParams.WRAP_CONTENT
             params.width = LayoutParams.MATCH_PARENT
             params.setMargins(8,0,16,0)
             binding.statusText.layoutParams = params
